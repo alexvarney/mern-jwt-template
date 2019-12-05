@@ -6,7 +6,7 @@
 
 require('dotenv').config();
 var app = require('../app');
-var debug = require('debug')('habit-tracker-react:server');
+var debug = require('debug')('mern-jwt-template:server');
 var http = require('http');
 
 /**
