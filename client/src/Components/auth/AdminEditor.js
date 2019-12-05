@@ -23,10 +23,11 @@ function AdminEditor(props) {
 
     }
 
-    useEffect( () => getUsers(), [])
+    useEffect( () => getUsers(), [props.auth.user])
 
-
-    return (
+    if(props.auth.user && props.auth.user.role === 'admin'){
+        return (
+        <div className="container">
         <div className="card" style={{marginTop: '1rem'}}>
             <h5 className="card-header">Admin Editor</h5>
             <div className="card-body container">
@@ -34,7 +35,10 @@ function AdminEditor(props) {
             <AdminEditorTable users={users} token={props.auth.token} updateUsers={getUsers}/>
             </div>
         </div>
-    )
+        </div>
+    ) } else {
+        return <span>You must be an admin to view this.</span>
+    }
 }
 
 const mapStateToProps = state => ({

@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import store from './Store/store'
-import './App.css';
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
 
 import Header from './Components/Header'
 import {loginWithToken} from './Store/Actions/auth'
 import UserManager from './Components/UserManager';
+import AdminEditor from './Components/auth/AdminEditor';
 
 function App() {
 
@@ -14,14 +15,17 @@ function App() {
   },[])
 
   return (
+    <BrowserRouter>
     <Provider store={store}>
       <div className="App">
         <Header />
-        <div className="container">
-          <UserManager />
-        </div>
+        <Switch>
+          <Route path="/user" component={UserManager} />
+          <Route path="/admin" component={AdminEditor} />
+        </Switch>
       </div>
     </Provider>
+    </BrowserRouter>
   );
 }
 

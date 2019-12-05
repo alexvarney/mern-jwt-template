@@ -7,20 +7,13 @@ import AdminEditor from './auth/AdminEditor'
 
 function UserManager(props) {
     return (
-        <div>
+        <div className="container">
             {!props.auth.loggedIn && 
                 <LoginForm />}
 
             {props.auth.loggedIn && <> 
                 <UserProfile /> 
-
-                {props.auth.user.role === 'admin' && <> 
-
-                    <AdminEditor />
-                
                 </>}
-
-            </>}
         </div>
     )
 }
