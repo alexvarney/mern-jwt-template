@@ -1,12 +1,10 @@
 import React from 'react'
-import TextInputToggle from './_textInputToggle';
 import TableRow from './_tableRow';
 
 export default function AdminEditorTable(props) {
 
-    const {users, token, updateUsers} = props;
+    const {users, updateUsers} = props;
 
-    const updatedUsers = [];
 
     return (
         <div className="table-resposive">

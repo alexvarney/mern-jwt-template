@@ -17,13 +17,12 @@ function AdminEditor(props) {
 
         Axios.get('/api/user', config)
             .then( res => {
-                console.log(res.data);
                 setUsers(res.data)
             }).catch(err => console.log(err))
 
     }
 
-    useEffect( () => getUsers(), [props.auth.user])
+    useEffect( () => getUsers(), [props.auth.user,])
 
     if(props.auth.user && props.auth.user.role === 'admin'){
         return (

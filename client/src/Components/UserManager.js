@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import LoginForm from './auth/LoginForm'
 import UserProfile from './auth/UserProfile'
-import AdminEditor from './auth/AdminEditor'
 
 
 function UserManager(props) {

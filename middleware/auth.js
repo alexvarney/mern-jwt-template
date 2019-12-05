@@ -4,8 +4,6 @@ const User = require('../models/User')
 const jwtKey = process.env.JWT_KEY
 
 const auth = (options) => (req, res, next) => {
-        
-        console.log(options)
         try {
             const token = req.header('Authorization').replace('Bearer ', '')
             const data = jwt.verify(token, jwtKey)
