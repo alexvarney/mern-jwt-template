@@ -18,7 +18,6 @@ export const login = ({ email, password }) => dispatch => {
 
 export const logout = token => dispatch => {
     localStorage.removeItem('jwtToken')
-    console.log(token)
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`

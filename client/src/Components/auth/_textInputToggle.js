@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import classNames from "classnames";
+import React, { useState } from "react";
 
 export default function TextInputToggle({ value, name, onChange, mask=null, type="text" }) {
   const [showInput, setInputState] = useState(false);
