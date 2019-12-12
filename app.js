@@ -5,11 +5,31 @@ var logger = require('morgan');
 
 var mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_HOST, {useNewUrlParser: true})
-    .then(()=>console.log('Connected to Mongo'))
-    .catch((err)=>Console.log(err))
+mongoose
+  .connect(process.env.MONGO_HOST, { useNewUrlParser: true })
+  .then(async () => {
+    const users = await User.find();
 
-var indexRouter = require('./routes/index');
+    if (users.length === 0) {
+      //Create default admin user if there's no users in the database
+      const newAdmin = new User({
+        name: "Admin User",
+        email: "admin@example.com",
+        password: await bcrypt.hash("password", 8),
+        role: 'admin',
+      });
+
+      newAdmin
+        .save()
+        .then(res =>
+          console.log("Created default admin (admin@example.com; password)")
+        )
+        .catch(err => console.log(err));
+    }
+  })
+  .catch(err => Console.log(err));
+
+
 var apiRouter = require('./routes/api/apiRouter');
 
 var app = express();
