@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../components/layout/layout";
+import Button from "../components/shared/button";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -70,29 +71,11 @@ Form.Input = styled.input`
   }
 `;
 
-Form.Button = styled.button`
-  background-color: ${({ theme }) => theme.colors.slateBlue_medium};
-  border: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.25rem;
-  color: hsl(0, 0%, 100%);
-  font-weight: 700;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  grid-column: 1 / -1;
-  justify-self: right;
-  cursor: pointer;
-
+Form.Button = styled(Button)`
   margin-top: 1.5rem;
-
+  justify-self: right;
   @media (min-width: 320px) {
     margin-top: 0;
-  }
-
-  :focus,
-  :hover {
-    outline: none;
-    background-color: ${({ theme }) => theme.colors.slateBlue_dark};
   }
 `;
 
