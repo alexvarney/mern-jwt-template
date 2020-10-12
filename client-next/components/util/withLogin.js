@@ -27,9 +27,9 @@ export default function withLogin(
 
     if (typeof window !== "undefined") {
       token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("jwt"))
-        .split("=")[1];
+        ?.split("; ")
+        ?.find((row) => row.startsWith("jwt"))
+        ?.split("=")[1];
     }
 
     const response = await fetch(PROFILE_ENDPOINT, {
