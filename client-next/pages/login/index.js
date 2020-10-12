@@ -65,4 +65,6 @@ function LoginPage({ user }) {
   );
 }
 
-export default withLogin(LoginPage, "/profile");
+export default withLogin(LoginPage, (_, user) =>
+  user._id ? "/profile" : null
+);

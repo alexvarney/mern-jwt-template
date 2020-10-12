@@ -32,7 +32,7 @@ function useAuth() {
 
   const actions = {
     handleLogin: (token) => {
-      setCookie("jwt", token, { path: "/" });
+      if (token) setCookie("jwt", token, { path: "/" });
       dispatch({ type: "LOGIN" });
     },
     handleLogout: () => {

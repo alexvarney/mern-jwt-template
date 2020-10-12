@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { useContext, useEffect } from "react";
 import Config from "../../config";
 import { useRouter } from "next/router";
+import Auth from "./auth";
 
 const PROFILE_ENDPOINT = `${Config.API_ENDPOINT}${Config.PROFILE}`;
 
@@ -10,16 +11,23 @@ function isBrowser() {
 
 export default function withLogin(
   WrappedComponent,
-  redirectValid,
-  redirectInvalid
+  redirectRule = (context, user) => null
 ) {
-  const AuthenticatedWithRedirect = ({ redirect, ...rest }) => {
+  const AuthenticatedWithRedirect = ({ redirect, user, ...rest }) => {
     const router = useRouter();
+    const [authState, authActions] = useContext(Auth);
+
+    useEffect(() => {
+      if (!authState.isLoggedIn && user._id) {
+        authActions.handleLogin();
+      }
+    });
+
     if (redirect && isBrowser()) {
       router.push(redirect);
     }
 
-    return <WrappedComponent {...rest} />;
+    return <WrappedComponent user={user} {...rest} />;
   };
 
   AuthenticatedWithRedirect.getInitialProps = async (context) => {
@@ -41,24 +49,12 @@ export default function withLogin(
       },
     }).then((res) => res.json());
 
-    let redirect = null;
+    let redirect = redirectRule(context, response);
 
-    if (!isBrowser() && context.res) {
-      //SSR
-      if (!response._id && redirectInvalid) {
-        context.res.writeHead(302, { Location: redirectInvalid });
-        context.res.end();
-      } else if (response._id && redirectValid) {
-        context.res.writeHead(302, { Location: redirectValid });
-        context.res.end();
-      }
-    } else {
-      if (!response._id && redirectInvalid) {
-        redirect = redirectInvalid;
-      }
-      if (response._id && redirectValid) {
-        redirect = redirectValid;
-      }
+    if (!isBrowser() && context.res && redirect) {
+      context.res.writeHead(302, { Location: redirect });
+      context.res.end();
+      redirect = null;
     }
 
     // Check if Page has a `getInitialProps`; if so, call it.

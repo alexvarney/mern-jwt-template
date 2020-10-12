@@ -59,4 +59,6 @@ function ProfilePage({ error, user }) {
   );
 }
 
-export default withLogin(ProfilePage, null, "/login");
+export default withLogin(ProfilePage, (_, user) =>
+  user._id ? null : "/login"
+);
