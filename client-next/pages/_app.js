@@ -1,5 +1,6 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { Cookies, CookiesProvider } from "react-cookie";
+import { AuthProvider } from "../components/util/auth";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -23,10 +24,12 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <CookiesProvider>
-        <GlobalStyle />
-        <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
-        </ThemeProvider>
+        <AuthProvider>
+          <GlobalStyle />
+          <ThemeProvider theme={theme}>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </AuthProvider>
       </CookiesProvider>
     </>
   );

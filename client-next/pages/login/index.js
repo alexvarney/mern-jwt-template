@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 
@@ -6,20 +6,19 @@ import Config from "../../config";
 import Layout from "../../components/layout/layout";
 import withLogin from "../../components/util/withLogin";
 import { Container, Title, Form } from "../../components/pages/login/styles";
+import Auth from "../../components/util/auth";
 
 const LOGIN_ENDPOINT = `${Config.API_ENDPOINT}${Config.LOGIN}`;
 
 function LoginPage({ user }) {
   const router = useRouter();
-
-  const [cookies, setCookie] = useCookies(["jwt"]);
+  const [authState, authActions] = useContext(Auth);
 
   const [passwordInput, setPasswordInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(emailInput, passwordInput);
 
     fetch(LOGIN_ENDPOINT, {
       method: "POST",
@@ -32,9 +31,8 @@ function LoginPage({ user }) {
       .catch((error) => console.error(error))
       .then((res) => res.json())
       .then((data) => {
-        console.log("success");
         if (data.token) {
-          setCookie("jwt", data.token, { path: "/" });
+          authActions.handleLogin(data.token);
           router.push("/profile");
         }
       });
