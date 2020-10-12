@@ -35,6 +35,7 @@ function LoginPage({ user }) {
         console.log("success");
         if (data.token) {
           setCookie("jwt", data.token, { path: "/" });
+          router.push("/profile");
         }
       });
   };
