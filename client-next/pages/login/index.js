@@ -1,48 +1,33 @@
 import { useState, useContext } from "react";
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 
-import Config from "../../config";
 import Layout from "../../components/layout/layout";
 import withLogin from "../../components/util/withLogin";
 import { Container, Title, Form } from "../../components/pages/login/styles";
 import Auth from "../../components/util/auth";
 
-const LOGIN_ENDPOINT = `${Config.API_ENDPOINT}${Config.LOGIN}`;
-
-function LoginPage({ user }) {
+function LoginPage(props) {
   const router = useRouter();
   const [authState, authActions] = useContext(Auth);
 
   const [passwordInput, setPasswordInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
 
-  const handleFormSubmit = (event) => {
+  const handleLoginSubmit = (event) => {
     event.preventDefault();
 
-    fetch(LOGIN_ENDPOINT, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-      body: JSON.stringify({ email: emailInput, password: passwordInput }),
-    })
-      .catch((error) => console.error(error))
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.token) {
-          authActions.handleLogin(data.token);
-          router.push("/profile");
-        }
-      });
+    authActions.login(emailInput, passwordInput).then((data) => {
+      if (data.token) {
+        router.push("/profile");
+      }
+    });
   };
 
   return (
     <Layout>
       <Container>
         <Title>Log In</Title>
-        <Form onSubmit={handleFormSubmit}>
+        <Form onSubmit={handleLoginSubmit}>
           <Form.Label for="email">Email</Form.Label>
           <Form.Input
             value={emailInput}

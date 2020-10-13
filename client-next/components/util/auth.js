@@ -1,5 +1,9 @@
 import React, { useReducer } from "react";
 import { useCookies } from "react-cookie";
+import Config from "../../config";
+
+const LOGIN_ENDPOINT = `${Config.API_ENDPOINT}${Config.LOGIN}`;
+const LOGOUT_ENDPOINT = `${Config.API_ENDPOINT}${Config.LOGOUT}`;
 
 const AuthContext = React.createContext();
 
@@ -18,6 +22,12 @@ function useAuth() {
         return {
           ...prevState,
           isLoggedIn: false,
+          user: {},
+        };
+      case "SET_USER":
+        return {
+          ...prevState,
+          user: payload,
         };
       default:
         return prevState;
@@ -26,6 +36,7 @@ function useAuth() {
 
   const initialState = {
     isLoggedIn: false,
+    user: {},
   };
 
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -38,6 +49,42 @@ function useAuth() {
     handleLogout: () => {
       removeCookie("jwt");
       dispatch({ type: "LOGOUT" });
+    },
+    setUser: (user) => {
+      dispatch({ type: "SET_USER", payload: user });
+    },
+    login: async (email, password) => {
+      let data = await fetch(LOGIN_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+      data = await data.json();
+      if (data.token) {
+        setCookie("jwt", data.token, { path: "/" });
+        dispatch({ type: "LOGIN" });
+        dispatch({ type: "SET_USER", payload: data.user });
+      }
+      return data;
+    },
+    logout: async () => {
+      const result = await fetch(LOGOUT_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+          Authorization: cookies.jwt,
+        },
+      });
+      removeCookie("jwt");
+      dispatch({ type: "LOGOUT" });
+      return result;
     },
   };
 

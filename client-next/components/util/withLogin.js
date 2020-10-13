@@ -20,6 +20,7 @@ export default function withLogin(
     useEffect(() => {
       if (!authState.isLoggedIn && user._id) {
         authActions.handleLogin();
+        authActions.setUser(user);
       }
     });
 
